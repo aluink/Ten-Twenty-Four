@@ -3,4 +3,4 @@ import TTF.Board
 
 
 main :: IO ()
-main = putStrLn "Hello World"
+main = printBoard newBoard
