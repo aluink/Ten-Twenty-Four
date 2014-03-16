@@ -2,6 +2,7 @@
 module TTF.Board (
   Board,
   Value,
+  Move(..),
 
   newBoard,
   printBoard
@@ -14,7 +15,7 @@ data Board = Board {
   state :: StdGen
 }
 
-data Move = RIGHT | LEFT | UP | DOWN
+data Move = RIGHT | LEFT | UP | DOWN deriving (Show,Eq)
 
 data Value = EMPTY | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | TEN deriving (Eq,Ord)
 
@@ -31,21 +32,6 @@ instance Show Value where
          | v == TWO = "1024"
          | otherwise = "    "
 
-scanline :: IO (Maybe Move)
-scanline = do
-  c <- hGetChar stdin
-  input <- if ord c == 27 then do
-             c <- hGetChar stdin
-             if ord c == 91 then do
-               c <- hGetChar stdin
-               case ord c of
-                  65 -> return "UP"
-                  66 -> return "DOWN"
-                  67 -> return "RIGHT"
-                  68 -> return "LEFT"
-              else return ("BAD2: " ++ show (ord c))
-           else return ("BAD1: " ++ show (ord c))
-  return Just input
 
 printBoard :: Board -> IO ()
 printBoard (Board p _) = do
