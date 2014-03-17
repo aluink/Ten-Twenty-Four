@@ -5,6 +5,7 @@ module TTF.Board (
   Move(..),
 
   newBoard,
+  makeMove,
   printBoard
 ) where
 
@@ -22,14 +23,14 @@ data Value = EMPTY | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NIN
 instance Show Value where
   show v | v == ONE = " 2  "
          | v == TWO = " 4  "
-         | v == TWO = " 8  "
-         | v == TWO = " 16 "
-         | v == TWO = " 32 "
-         | v == TWO = " 64 "
-         | v == TWO = "128 "
-         | v == TWO = "256 "
-         | v == TWO = "512 "
-         | v == TWO = "1024"
+         | v == THREE = " 8  "
+         | v == FOUR = " 16 "
+         | v == FIVE = " 32 "
+         | v == SIX = " 64 "
+         | v == SEVEN = "128 "
+         | v == EIGHT = "256 "
+         | v == NINE = "512 "
+         | v == TEN = "1024"
          | otherwise = "    "
 
 
@@ -47,5 +48,19 @@ printBoard (Board p _) = do
   where
     s x = show $ p!!x
 
+makeMove :: Board -> Move -> Board
+makeMove (Board p s) _ = Board np ns'
+  where
+    (i, ns) = next s
+    (i',ns') = next ns
+    f (x,EMPTY) vs = vs
+    f (k,_) vs = k:vs
+    emptySpaces = foldr f [] $ zip [0..] p
+    newPieceL = emptySpaces!!(i `mod` (length emptySpaces))
+    np = take newPieceL p ++ [(if even i' then ONE else TWO)] ++ (drop (newPieceL+1) p)
+
+newBoardRand :: Int -> Board
+newBoardRand i = Board (take 16 $ repeat EMPTY) $ mkStdGen i
+
 newBoard :: Board
-newBoard = Board (take 16 $ repeat EMPTY) $ mkStdGen 0
+newBoard = newBoardRand 0

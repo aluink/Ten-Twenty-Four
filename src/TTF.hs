@@ -4,10 +4,14 @@ import Data.Char
 
 
 main :: IO ()
-main = do
+main = go newBoard
+
+go :: Board -> IO ()
+go b = do
   m <- scanline
-  putStrLn $ show m
-  printBoard newBoard
+  let b' = makeMove b undefined
+  printBoard b'
+  go b'
             
            
 
